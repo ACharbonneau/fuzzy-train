@@ -1,7 +1,7 @@
 
 module load bedtools
-mkdir ../RawData
-cd ../RawData
+mkdir RawData
+cd RawData
 
 ## Download files and uncompress
 
@@ -46,15 +46,15 @@ cd ..
 
 # Compare the two sorted annotation files, keep only lines that appear in both
 
-comm -12 ../RawData/UTR_3_UCSC.bed_LDSR.sort ../RawData/Coding_UCSC.bed_LDSR.sort > both3UTR_Coding.txt
+comm -12 RawData/UTR_3_UCSC.bed_LDSR.sort RawData/Coding_UCSC.bed_LDSR.sort > both3UTR_Coding.txt
 
 # Use the master SNP bedfile from the LDSR paper to assign locations to SNPS and make a bed file
 
-awk 'NR==FNR{a[$0]++;next}a[$4]'  both3UTR_Coding.txt ../../10_2_Base/RawData/w_hm3.bed > both3UTR_Coding.bed
+awk 'NR==FNR{a[$0]++;next}a[$4]'  both3UTR_Coding.txt RawData/w_hm3.bed > both3UTR_Coding.bed
 
 # Find the intersection of the SNP bedfile and the splice bedfile
 
-bedtools intersect -wa -wb -a both3UTR_Coding.bed -b ../RawData/VASTDB_PSI_Hsa108_hg19.bed > both3UTR_Coding.splice
+bedtools intersect -wa -wb -a both3UTR_Coding.bed -b RawData/VASTDB_PSI_Hsa108_hg19.bed > both3UTR_Coding.splice
 
 # Sort the intersection file
 
@@ -62,7 +62,7 @@ sort -k 8 both3UTR_Coding.splice > both3UTR_Coding.splice.sorted
 
 # Join the intersection file to the original splice file that has tissue information (makes an extremely wide excel sheet)
 
-join -1 8 -2 2 both3UTR_Coding.splice.sorted ../RawData/VASTDB_PSI_Hsa108_hg19.tab > both3UTR_Coding.splice.tsv
+join -1 8 -2 2 both3UTR_Coding.splice.sorted RawData/VASTDB_PSI_Hsa108_hg19.tab > both3UTR_Coding.splice.tsv
 
 
 
